@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "tabs auto switcher using cron expression",
+  "description": "Automatically switches tabs based on user-defined cron expressions",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage", "tabs"],
+  "icons": {
+    "16": "img/icon-16.png",
+    "32": "img/icon-32.png",
+    "48": "img/icon-48.png",
+    "128": "img/icon-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

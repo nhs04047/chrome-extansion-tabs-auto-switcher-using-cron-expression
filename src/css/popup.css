@@ -1,0 +1,16 @@
+h4 {
+  margin-top: 20px;
+}
+
+#statusCircle {
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  margin: 0px 10px 10px 0px;
+}
+
+.container {
+  width: 400px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="./js/popup.js"></script>
+  <link rel="stylesheet" href="./css/popup.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container">
+    <h4>Tabs Auto Switcher Options</h4>
+    <hr>
+    <div class="mb-3">
+      <label class="form-label">Cron Expression</label>
+      <input type="text" class="form-control" id="cronExpression" aria-describedby="emailHelp"
+        placeholder="e.g., 0/5 * * * * * *">
+      <div id="cronExpressionHelp" class="form-text">Enter Cron expression</div>
+    </div>
+    <button id="saveButton" type="button" class="btn btn-primary">Save</button>
+    <br><br>
+    <div id="statusCircle"></div>
+    <div class="switchContainer">
+      <button id="startButton" type="button" class="btn btn-primary">Start</button>
+      <button id="stopButton" type="button" class="btn btn-primary">Stop</button>
+    </div>
+    <hr>
+    <a href="https://docs.oracle.com/cd/E12058_01/doc/doc.1014/e12030/cron_expressions.html">What is Cron
+      Expression?</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+</body>
+
+
+</html>
