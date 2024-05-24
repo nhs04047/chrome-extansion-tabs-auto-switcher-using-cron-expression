@@ -1,27 +1,52 @@
 var cronValidator = require("cron-validator");
 import "../css/popup.css";
+import "../img/saved-mark.svg";
 
 document.addEventListener("DOMContentLoaded", function () {
   var cronExpressionHelp = document.getElementById("cronExpressionHelp");
-  var saveButton = document.getElementById("saveButton");
+  // var saveButton = document.getElementById("saveButton");
+  // var savedMark = document.getElementById("savedMark");
   var cronExpressionInput = document.getElementById("cronExpression");
+  var tabReloadOptionCheckbox = document.getElementById(
+    "tabReloadOptionCheckbox"
+  );
+  var nextNumberInput = document.getElementById("nextNumberInput");
+  var nextNumberHelp = document.getElementById("nextNumberHelp");
   var startButton = document.getElementById("startButton");
   var stopButton = document.getElementById("stopButton");
   var statusCircle = document.getElementById("statusCircle");
 
-  chrome.storage.session.get(["cronExpression"], function (result) {
-    var storedCronExpression = result.cronExpression;
-    if (storedCronExpression) {
-      cronExpressionInput.value = storedCronExpression;
-    }
-  });
+  // chrome.storage.session.get(["cronExpression"], function (result) {
+  //   var storedCronExpression = result.cronExpression;
+  //   if (storedCronExpression) {
+  //     cronExpressionInput.value = storedCronExpression;
+  //   }
+  // });
 
-  chrome.storage.session.get(["switchingAbled"], async function (result) {
-    var switchingAbled = result.switchingAbled;
-    if (switchingAbled === true) {
-      statusCircle.style.backgroundColor = "green";
+  // chrome.storage.session.get(["switchingAbled"], async function (result) {
+  //   var switchingAbled = result.switchingAbled;
+  //   if (switchingAbled === true) {
+  //     statusCircle.style.backgroundColor = "green";
+  //   }
+  // });
+
+  chrome.storage.session.get(
+    [
+      "cronExpression",
+      "tabReload",
+      "tabReloadStatus",
+      "driveStatus",
+      "switchingEnabled",
+    ],
+    async (result) => {
+      cronExpressionInput.value = result.cronExpression;
+      tabReloadOptionCheckbox.checked =
+        result.tabReloadStatus === true ? true : false;
+      nextNumberInput.value = result.nextNumber;
+      statusCircle.style.backgroundColor =
+        result.driveStatus === true ? "green" : "red";
     }
-  });
+  );
 
   cronExpressionInput.addEventListener("input", function () {
     var cronExpression = cronExpressionInput.value;
@@ -35,16 +60,25 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  saveButton.addEventListener("click", async function () {
-    await jobOff();
-    var cronExpression = cronExpressionInput.value;
-    if (!isValidCronExpression(cronExpression)) {
+  nextNumberInput.addEventListener("input", () => {
+    var nextNumber = Number(nextNumberInput.value);
+    if (!isNaN(nextNumber)) {
+      nextNumberHelp.style.display = "none";
       return;
     }
-    chrome.storage.session.set({ cronExpression: cronExpression }, function () {
-      alert("Cron expression saved!");
-    });
+    nextNumber.style.display = "block";
   });
+
+  // saveButton.addEventListener("click", async function () {
+  //   await jobOff();
+  //   var cronExpression = cronExpressionInput.value;
+  //   if (!isValidCronExpression(cronExpression)) {
+  //     return;
+  //   }
+  //   chrome.storage.session.set({ cronExpression: cronExpression }, function () {
+  //     savedMark.style.display = "block";
+  //   });
+  // });
 
   startButton.addEventListener("click", async () => {
     await jobOn();
@@ -72,26 +106,44 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     statusCircle.style.backgroundColor = "red";
-    await chrome.storage.session.set({ switchingAbled: false });
+    await chrome.storage.session.set({ driveStatus: false });
   }
 
   async function jobOn() {
-    const result = await chrome.storage.session.get(["cronExpression"]);
+    const result = await chrome.storage.session.get([
+      "cronExpression",
+      "nextNumber",
+      "tabReloadStatus",
+    ]);
     if (
       !result.cronExpression ||
-      !isValidCronExpression(result.cronExpression)
+      !result.nextNumber ||
+      result.tabReloadStatus ||
+      !isValidCronExpression(result.cronExpression) ||
+      !isNaN(Number(result.nextNumber))
     ) {
       await jobOff();
       return;
     }
+
+    // const result = await chrome.storage.session.get(["cronExpression"]);
+    // if (
+    //   !result.cronExpression ||
+    //   !isValidCronExpression(result.cronExpression)
+    // ) {
+    //   await jobOff();
+    //   return;
+    // }
     await chrome.runtime.sendMessage({
       command: "on",
       cronExpression: result.cronExpression,
+      nextNumber: Number(result.nextNumber),
+      tabReloadStatus: result.tabReloadStatus,
     });
     document.documentElement.requestFullscreen().catch((err) => {
       console.log(err.message);
     });
     statusCircle.style.backgroundColor = "green";
-    await chrome.storage.session.set({ switchingAbled: true });
+    await chrome.storage.session.set({ driveStatus: true });
   }
 });

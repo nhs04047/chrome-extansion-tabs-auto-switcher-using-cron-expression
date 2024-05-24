@@ -34,10 +34,12 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
-        loader: "file-loader",
-        options: {
-          name: "name=[name].[ext]",
+        test: /\.(svg|png|jpg|jpeg|gif)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            outputPath: "img/",
+          },
         },
         exclude: /node_modules/,
       },

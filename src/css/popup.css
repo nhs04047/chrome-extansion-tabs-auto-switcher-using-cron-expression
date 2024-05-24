@@ -14,3 +14,15 @@ h4 {
   width: 400px;
   margin-bottom: 20px;
 }
+
+#savedMark {
+  width: 20px;
+  height: 20px;
+  margin: 10px;
+  display: none;
+}
+
+#saveContainer {
+  display: flex;
+  justify-content: flex-start;
+}
