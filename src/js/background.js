@@ -12,7 +12,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           let currentIndex = 0;
           const job = Cron(request.cronExpression, () => {
             currentIndex = (currentIndex + 1) % tabs.length;
-            nextIndex = (currentIndex + 1) % tabs.length;
             for (let i = 0; i < tabs.length; i++) {
               if (i === currentIndex) {
                 chrome.tabs.update(tabs[i].id, { muted: false, active: true });
@@ -20,7 +19,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 chrome.tabs.update(tabs[i].id, { muted: true });
               }
             }
-            chrome.tabs.reload(tabs[nextIndex].id);
+            if (request.tabReloadStatus) {
+              const nextIndex =
+                (request.nextNumber >= tabs.length
+                  ? currentIndex + tabs.length - 1
+                  : currentIndex + request.nextNumber) % tabs.length;
+              chrome.tabs.reload(tabs[nextIndex].id);
+            }
           });
 
           jobs.set(windowId, job);

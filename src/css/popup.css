@@ -26,3 +26,54 @@ h4 {
   display: flex;
   justify-content: flex-start;
 }
+
+#nextNumberHelp {
+  display: none;
+}
+
+.description {
+  color: dimgray;
+  font-size: 10pt;
+  font-style: oblique;
+}
+
+#nextNumberInput {
+  width: 40px;
+  text-align: center;
+}
+
+.btn {
+  position: relative;
+  background-color: rgb(46, 118, 234);
+  border-radius: 5px;
+  box-shadow: rgb(9, 54, 125) 0px 4px 0px 0px;
+  padding: 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: 100px;
+  height: 30px;
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: "";
+  background-color: rgb(103, 151, 228);
+  width: 0;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  transition: width 700ms ease-in-out;
+  display: inline-block;
+}
+
+.btn:hover::before {
+  width: 100%;
+}
