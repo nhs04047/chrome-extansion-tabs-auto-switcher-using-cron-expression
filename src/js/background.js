@@ -19,7 +19,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 chrome.tabs.update(tabs[i].id, { muted: true });
               }
             }
-            if (request.tabReloadStatus) {
+            if (
+              (request.tabReloadStatus && tabs.length > 1) ||
+              (request.tabReloadStatus &&
+                tabs.length === 1 &&
+                request.ifOneTabWindowReload === true)
+            ) {
               const nextIndex =
                 (request.nextNumber >= tabs.length
                   ? currentIndex + tabs.length - 1

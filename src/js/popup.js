@@ -9,13 +9,22 @@ document.addEventListener("DOMContentLoaded", function () {
     "tabReloadOptionCheckbox"
   );
   var nextNumberInput = document.getElementById("nextNumberInput");
+  var ifOneTabWindowReloadOptionCheckbox = document.getElementById(
+    "ifOneTabWindowReloadOptionCheckbox"
+  );
   var nextNumberHelp = document.getElementById("nextNumberHelp");
   var startButton = document.getElementById("startButton");
   var stopButton = document.getElementById("stopButton");
   var statusCircle = document.getElementById("statusCircle");
 
   chrome.storage.session.get(
-    ["cronExpression", "tabReloadStatus", "nextNumber", "driveStatus"],
+    [
+      "cronExpression",
+      "tabReloadStatus",
+      "ifOneTabWindowReload",
+      "nextNumber",
+      "driveStatus",
+    ],
     async (result) => {
       console.log(result);
       if (result.cronExpression) {
@@ -27,6 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       tabReloadOptionCheckbox.checked =
         result.tabReloadStatus === true ? true : false;
+
+      ifOneTabWindowReloadOptionCheckbox.checked =
+        result.ifOneTabWindowReload === true ? true : false;
 
       statusCircle.style.backgroundColor =
         result.driveStatus === true ? "green" : "red";
@@ -70,6 +82,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  ifOneTabWindowReloadOptionCheckbox.addEventListener("click", async () => {
+    if (ifOneTabWindowReloadOptionCheckbox.checked) {
+      await chrome.storage.session.set({ ifOneTabWindowReload: true });
+    } else {
+      await chrome.storage.session.set({ ifOneTabWindowReload: false });
+    }
+  });
+
   startButton.addEventListener("click", async () => {
     await jobOn();
   });
@@ -104,6 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "cronExpression",
       "nextNumber",
       "tabReloadStatus",
+      "ifOneTabWindowReload",
     ]);
     if (
       !result.cronExpression ||
@@ -124,6 +145,10 @@ document.addEventListener("DOMContentLoaded", function () {
         result.nextNumber === undefined ? 1 : Number(result.nextNumber),
       tabReloadStatus:
         result.tabReloadStatus === undefined ? false : result.tabReloadStatus,
+      ifOneTabWindowReload:
+        result.ifOneTabWindowReload === undefined
+          ? false
+          : result.ifOneTabWindowReload,
     });
     document.documentElement.requestFullscreen().catch((err) => {
       console.log(err.message);
