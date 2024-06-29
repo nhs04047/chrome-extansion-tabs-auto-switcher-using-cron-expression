@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-tabs-auto-switcher-using-cron-expression",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Automatically switches tabs based on user-defined cron expressions",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
