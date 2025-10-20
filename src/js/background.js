@@ -2,7 +2,9 @@ var { Cron } = require("croner");
 let jobs = new Map();
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log("Background received message:", request);
   if (request.command === "on") {
+    console.log("Starting job with cron expression:", request.cronExpression);
     chrome.windows.getAll({ populate: true }, (windows) => {
       windows.forEach((window) => {
         const windowId = window.id;
@@ -10,7 +12,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           const foundJog = jobs.get(windowId);
           if (foundJog) foundJog.stop();
           let currentIndex = 0;
-          const job = Cron(request.cronExpression, () => {
+          // Normalize cron expression - add seconds if it's 5-field format
+          let cronExpression = request.cronExpression;
+          const fields = cronExpression.trim().split(/\s+/);
+          if (fields.length === 5) {
+            cronExpression = "0 " + cronExpression; // Add seconds field
+          }
+
+          console.log("Normalized cron expression:", cronExpression);
+          const job = Cron(cronExpression, () => {
+            console.log("Cron job executed, switching tabs");
             currentIndex = (currentIndex + 1) % tabs.length;
             for (let i = 0; i < tabs.length; i++) {
               if (i === currentIndex) {

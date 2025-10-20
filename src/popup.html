@@ -2,66 +2,126 @@
 <html lang="en">
 
 <head>
-  <script src="./js/popup.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabs Auto Switcher</title>
   <link rel="stylesheet" href="./css/popup.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html,
+    body {
+      width: 400px !important;
+      min-width: 400px !important;
+      max-width: 400px !important;
+      height: auto !important;
+    }
+  </style>
+  <script src="./js/popup.js"></script>
 </head>
 
 <body>
-  <div class="container">
-    <h3>Tabs Auto Switcher Options</h3>
-    <hr>
-    <hr>
-    <div id="cronExtensionOptionContainer">
-      <h4>Cron Extansion Option</h4>
-      <div id="cronExtensionInputContainer">
-        <label class="form-label">- Cron Expression: </label>
-        <input type="text" class="form-control" id="cronExpression" aria-describedby="emailHelp"
-          placeholder="e.g., 0/5 * * * * * *">
-        <p id="cronExpressionHelp" class="description">Enter Cron expression (e.g., 0/5 * * * * * *)</p>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">🔄</div>
+          <h1>Tabs Auto Switcher</h1>
+        </div>
+        <div class="status-indicator">
+          <div id="statusCircle" class="status-dot"></div>
+          <span id="statusText" class="status-text">Stopped</span>
+        </div>
       </div>
-      <!-- <div id="saveContainer">
-        <button id="saveButton" type="button" class="btn btn-primary">Save</button>
-        <img id="savedMark" src="img/saved-mark.svg" alt="savedMark" />
-      </div> -->
-    </div>
-    <br>
-    <hr>
-    <div id="tabReloadOptionContainer">
-      <h4>Tab Reload Option</h4>
-      <div id="tabReloadActiveInput">
-        <label for="tabReloadOptionCheckbox">- enabled: </label>
-        <input type="checkbox" id="tabReloadOptionCheckbox" name="tabReloadOptionCheckbox" />
-      </div>
-      <div id="tabReloadNextOption">
-        - Reload the
-        <input type="text" id="nextNumberInput" name="nextNumberInput" placeholder="e.g., 1">
-        next tab from the active tab
-        <p id="nextNumberHelp" class="description">Please Enter a number</p>
-        <p class="description">0 is the currently active tab.
-          If the input value is greater than the number of activated tabs, it is automatically registered as -1 of the
-          total number of tabs.</p>
-      </div>
-      <div id="ifOneTabWindowReloadInput">
-        <label for="ifOneTabWindowReloadOptionCheckbox">- reload windows even if they have only one tab: </label>
-        <input type="checkbox" id="ifOneTabWindowReloadOptionCheckbox" name="ifOneTabWindowReloadOptionCheckbox" />
-      </div>
-    </div>
-    <br>
-    <hr>
-    <div id="DriveOptionContainer">
-      <h4>Drive Option</h4>
-      <div id="statusCircle"></div>
-      <div class="switchContainer">
-        <button id="startButton" type="button" class="btn">Start</button>
-        <button id="stopButton" type="button" class="btn">Stop</button>
-      </div>
-    </div>
-    <hr>
-    <a href="https://docs.oracle.com/cd/E12058_01/doc/doc.1014/e12030/cron_expressions.html">What is Cron
-      Expression?</a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Cron Expression Section -->
+      <section class="config-section">
+        <div class="section-header">
+          <div class="section-icon">⏰</div>
+          <h3>Cron Expression</h3>
+        </div>
+        <div class="section-content">
+          <div class="input-group">
+            <label for="cronExpression" class="input-label">Schedule Pattern</label>
+            <div class="input-wrapper">
+              <input type="text" id="cronExpression" class="form-input"
+                placeholder="e.g., 0/5 * * * * or 0/5 * * * * * *">
+              <div class="input-icon">ℹ️</div>
+            </div>
+            <p id="cronExpressionHelp" class="help-text">Enter a valid cron expression to schedule tab switching</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Reload Section -->
+      <section class="config-section">
+        <div class="section-header">
+          <div class="section-icon">🔄</div>
+          <h3>Tab Reload Options</h3>
+        </div>
+        <div class="section-content">
+          <div class="toggle-group">
+            <div class="toggle-item">
+              <label class="toggle-label">
+                <input type="checkbox" id="tabReloadOptionCheckbox" class="toggle-input">
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">Enable Tab Reloading</span>
+              </label>
+            </div>
+
+            <div class="input-group" id="tabReloadNextOption">
+              <label for="nextNumberInput" class="input-label">Reload Next Tab</label>
+              <div class="input-wrapper">
+                <input type="number" id="nextNumberInput" class="form-input number-input" placeholder="1" min="0">
+                <span class="input-suffix">tabs ahead</span>
+              </div>
+              <p id="nextNumberHelp" class="help-text error">Please enter a valid number</p>
+              <p class="help-text">0 = current tab. If value exceeds total tabs, it will be set to total-1</p>
+            </div>
+
+            <div class="toggle-item">
+              <label class="toggle-label">
+                <input type="checkbox" id="ifOneTabWindowReloadOptionCheckbox" class="toggle-input">
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">Reload single-tab windows</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Control Section -->
+      <section class="config-section">
+        <div class="section-header">
+          <div class="section-icon">▶️</div>
+          <h3>Control</h3>
+        </div>
+        <div class="section-content">
+          <div class="button-group">
+            <button id="startButton" class="btn btn-primary">
+              <div class="btn-icon">▶️</div>
+              <span>Start</span>
+            </button>
+            <button id="stopButton" class="btn btn-secondary">
+              <div class="btn-icon">⏹️</div>
+              <span>Stop</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <a href="https://docs.oracle.com/cd/E12058_01/doc/doc.1014/e12030/cron_expressions.html" class="help-link"
+        target="_blank">
+        <div class="help-icon">🔗</div>
+        Learn about Cron Expressions
+      </a>
+    </footer>
   </div>
 </body>
-
 
 </html>
